@@ -3,6 +3,7 @@ In this repository I'll store what I belive is usefull scripts for Snow Automati
 
 A couple of the scripts are Powershell module functions re-designed to fit Automation Platform, such as some of the Active Directory scripts. 
 
+You will see these types of setups throughout the scripts (activites) in this repository as it's a security measure and service account vault that could and should be used unless other solutions can replace them. 
 
 ## Authenticate Powershell modules with Automation Platform
 Automation Platform is provided in most cases high-level permissions in multiple systems. Out of best practice it is to recommend using a seperate service account for each system instead of one account for all. 
@@ -13,37 +14,47 @@ This can be done in different ways but I'll show you the way I prefer to use whe
 
 The following solutions are done on a server with Automation Platform installed together with the Core module of Igap. The Igap module contains the core powershell functionality of Automation Platform and this is also where we'll find the commands to retrieve the Settings values and Service Account values. 
 
-### Example, how to use Automation Platform Settings and Service Account functionality
+### Example
+#### How to use Automation Platform Settings and Service Account functionality
 ```
 
-# Get the settings value of the property named PortalAddress in Automation Platform (This will turn out to be the address to your instance of AP)
+# Get the settings value of the property named PortalAddress in Automation Platform 
+# (This will turn out to be the address to your instance of AP)
 PS:> Get-APSetting -Name PortalAddress
 
-# Get the object of the service account with the name provided, the Scope indicates if it's using the Workflow Engine account (0) or AppPool account (1)
+# Get the object of the service account with the name provided, the Scope indicates 
+#if it's using the Workflow Engine account (0) or AppPool account (1)
 # Store it in a parameter named ServiceAccount (will be used later)
 PS:> $ServiceAccount = Get-ServiceAccount -Name <SERVICE_ACCOUNT_NAME> -Scope 0
 
-# Using the Object retrieved from Get-ServiceAccount to assign the Password to a Parameter called ServiceAccountPassword
+# Using the Object retrieved from Get-ServiceAccount to assign the Password to a 
+# Parameter called ServiceAccountPassword
 PS:> $ServiceAccountPassword = $ServiceAccount.Password | ConvertTo-SecureString -AsPlainText -Force
 
 ```
 
+#### Use Settings and Service Account to create a Credential object
 The following is an example of how you could use the above commands to create a PSCredential object to be used with Active Directory
 
 ```
-# Get the value of the Setting with the name ActiveDirectory-ServiceAccountName and save it to a variable
+# Get the value of the Setting with the name ActiveDirectory-ServiceAccountName 
+# and save it to a variable
 PS:> $ServiceAccountName = Get-APSetting -Name ActiveDirectory-ServiceAccountName
 
-# We've saved a Service account in AP with the same name as the value of the ActiveDirectory-ServiceAccountName and retrieve the object the following way
+# We've saved a Service account in AP with the same name as the value of the 
+# ActiveDirectory-ServiceAccountName and retrieve the object the following way
 PS:> $ServiceAccount = Get-ServiceAccount -Name $ServiceAccountName -Scope 0
 
-# We're using the ServiceAccount variable created to store in a variable by the name ServiceAccountPassword
+# We're using the ServiceAccount variable created to store in a variable by
+# the name ServiceAccountPassword
 PS:> $ServiceAccountPassword = $ServiceAccount.Password | ConvertTo-SecureString -AsPlainText -Force
 
-# We're using the retrieved ServiceAccountName and ServiceAccountPassword to create a PSCredential object to be used with the Active Directory module.
+# We're using the retrieved ServiceAccountName and ServiceAccountPassword to 
+# create a PSCredential object to be used with the Active Directory module.
 PS:> $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServiceAccountName,$ServiceAccountPassword
 
-# The Credential variable is being used to remove a Active directory user by the name jondoe (-Confirm set to $false in order to automate the command)
+# The Credential variable is being used to remove a Active directory user by 
+# the name jondoe (-Confirm set to $false in order to automate the command)
 PS:> Remove-ADUser -Identity jondoe -Credential $Credentials -Confirm:$false
 
 ```

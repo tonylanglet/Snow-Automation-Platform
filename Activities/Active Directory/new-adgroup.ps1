@@ -60,13 +60,12 @@ $Cred = New-Object -TypeName System.Management.Automation.PSCredential -Argument
 
         # Hashtable values
         if(![string]::IsNullOrEmpty($OtherAttributes)) { 
-            [hashtable]$hashOtherAttributes = ConvertTo-Hashtable $OtherAttributes 
-            $Parameters.Add('OtherAttributes',$hashOtherAttributes)  
+        	$Parameters.Add('OtherAttributes',(ConvertTo-Hashtable $OtherAttributes))  
         }
 
-        try {	
-            New-ADGroup @Parameters -Credential $Cred
-		    Write-Host "$scriptname Successfully created ADGroup [$Name]"
-	    } catch	{
-		    Write-Error "$scriptname Unable to create ADGroup. Exception: $_"
-	    }
+	try {
+		New-ADGroup @Parameters -Credential $Cred
+		Write-Host "$scriptname Successfully created ADGroup [$Name]"
+	} catch	{
+		Write-Error "$scriptname Unable to create ADGroup. Exception: $_"
+	}

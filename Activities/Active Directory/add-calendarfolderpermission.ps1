@@ -26,20 +26,22 @@ None                — no permissions to access folder and files.
     $Cred = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServiceAccountName,$ServiceAccountPassword 
 #endregion
 
+$scriptname = 'Add-CalendarFolderPermission:'
+
     try {
         $Session = New-PSSession -ConnectionUri "https://ps.outlook.com/powershell" -ConfigurationName Microsoft.Exchange -Credential $Cred -Authentication Basic -AllowRedirection -WarningAction SilentlyContinue
         $null = Import-PSSession -DisableNameChecking $Session -AllowClobber
-        Write-Host "New-Mailbox: Successfully created PSSession"
+        Write-Host "$scriptname Successfully created PSSession"
     } catch {
-        Write-Error "New-Mailbox: Unable to create PSSession"
+        Write-Error "$scriptname Unable to create PSSession"
         throw
     }
 
     try {
         $UserVerification = Get-Mailbox $User
-        Write-Host "Successfully found a mailbox for the target user"
+        Write-Host "$scriptname Successfully found a mailbox for the target user"
     } catch {
-        Write-Host "Unable to find a mailbox for the target user"
+        Write-Host "$scriptname Unable to find a mailbox for the target user"
         throw
     }
         
@@ -48,26 +50,26 @@ None                — no permissions to access folder and files.
             $CalendarFolders = (Get-MailboxFolderStatistics $CalendarIdentity -FolderScope Calendar).Identity
 
             if(![string]::IsNullOrEmpty($CalendarFolders[0])) {
-                Write-Verbose "Found Calendar folders"
+                Write-Verbose "$scriptname Found Calendar folders"
                 if($CalendarFolders[0].Contains("\")) {
                     $CalendarFolderName = ($CalendarFolders[0].Split("\"))[1]
-                    Write-Verbose "Saved calendar name"
+                    Write-Verbose "$scriptname Saved calendar name"
                 }
             }
         } catch {
-            Write-Host "Unable to find a folder of the type Calendar, Exception: $_"
+            Write-Host "$scriptname Unable to find a folder of the type Calendar, Exception: $_"
             throw
         }
 
         if(![string]::IsNullOrEmpty($CalendarFolderName)) {
             try {
                 Add-MailboxFolderPermission -Identity "$($CalendarIdentity):\$CalendarFolderName" -User $User -AccessRights $AccessRights -ErrorAction Stop
-                Write-Host "Successfully added calendar permissions"
+                Write-Host "$scriptname Successfully added calendar permissions"
             } catch {
-                Write-Host "Unable to add calendar permissions for user [$User] on the calendar that belongs to $CalendarIdentity, Exception: $_"
+                Write-Host "$scriptname Unable to add calendar permissions for user [$User] on the calendar that belongs to $CalendarIdentity, Exception: $_"
                 throw
             }
         }
     } else {
-        Write-Host "Unable to complete the request, make sure the target user exists in the environment"
+        Write-Host "$scriptname Unable to complete the request, make sure the target user exists in the environment"
     }

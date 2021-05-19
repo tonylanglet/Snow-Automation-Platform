@@ -20,8 +20,8 @@ None                — no permissions to access folder and files.
 #>
    
 #region Get AP Credentials
-    $ServiceAccountName = Get-APSetting <O365 SERVICE ACCOUNT NAME>
-    $ServiceAccount = Get-ServiceAccount -Name $ServiceAccountName -Scope 1
+    $ServiceAccountName = Get-APSetting "<SERVICE ACCOUNT USERNAME>"
+    $ServiceAccount = Get-ServiceAccount -Name "<AP SERVICE ACCOUNT NAME>" -Scope 1
     $ServiceAccountPassword = $ServiceAccount.Password | ConvertTo-SecureString -AsPlainText -Force
     $Cred = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServiceAccountName,$ServiceAccountPassword 
 #endregion

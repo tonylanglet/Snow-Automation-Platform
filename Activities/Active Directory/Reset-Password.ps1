@@ -3,9 +3,9 @@ Param (
     [parameter(mandatory=$true)][string]$NewPassword
 )
 
-    $scriptname = "Reset-Password:"
-if($Identity) {
+$scriptname = "Reset-Password:"
 
+if($Identity) {
 #region external Credentials
     try {
         $ADServiceAccountName = "<SERVICE ACCOUNT USERNAME>"

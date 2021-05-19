@@ -1,5 +1,5 @@
 # Snow-Automation-Platform
-In this repository I'll store what I belive is usefull scripts for Snow Automation Platform (AP). I'm using them on a daily basis and they provide me with well needed automation. Each script is designed to be re-used throughout the system and not designed as a Service specific script.
+In this repository I'll store what I belive are usefull scripts for Snow Automation Platform (AP). I'm using them on a daily basis and they provide me with well needed automation. Each script is designed to be re-used throughout the system and not designed as a Service specific script.
 
 A couple of the scripts are Powershell module functions re-designed to fit Automation Platform, such as some of the Active Directory scripts. 
 
@@ -10,7 +10,7 @@ Automation Platform is provided in most cases high-level permissions in multiple
 
 Todays integrations using REST APIs or similar requires authentications all from Basic to OAuth2. I wouldn't recommend typing in the Username/Password or Auth Tokens/Secrets into the scripts directly but rather use the functionality of Settings and Service Accounts in Automation Platform that support an encryptet solution for this. 
 
-This can be done in different ways but I'll show you the way I prefer to use when I need the password of a service account or a value from the settings field. 
+The service account management can be done in different ways, but I'll show you the way I prefer to use when I need the password of a service account or a value from the settings field. 
 
 The following solutions are done on a server with Automation Platform installed together with the Core module of Igap. The Igap module contains the core powershell functionality of Automation Platform and this is also where we'll find the commands to retrieve the Settings values and Service Account values. 
 
